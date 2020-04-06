@@ -1,10 +1,7 @@
 import time
 import random
 from sense_hat import SenseHat
-
-red = (255, 0, 0)  # apple
-white = (255, 255, 255)  # snake
-clear = (0, 0, 0)  # map
+from settings import *
 
 
 class Snake_game:

@@ -1,5 +1,6 @@
 from Snake import Snake_game
 
+
 def main():
     """
     main function, which create a Snake game object,
