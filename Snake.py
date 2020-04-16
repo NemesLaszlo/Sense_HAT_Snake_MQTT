@@ -70,7 +70,7 @@ class Snake_game:
             if self.trail[0][1] > 7:
                 self.trail[0][1] = 0
 
-            # we cover the situation, when the apple pos is a snake pos in the if statement
+            # we cover the situation, when the apple pos is a snake pos in this if statement
             if self.trail[0] == self.apple_pos:
                 self.apple_pos = []
                 while self.apple_pos == []:
