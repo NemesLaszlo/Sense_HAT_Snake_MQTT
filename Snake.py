@@ -1,7 +1,17 @@
+# import threading
 import time
 import random
+import xml
 from sense_hat import SenseHat
 from settings import *
+
+def thread_function(client):
+    """
+    Keepalive topic publisher, in very 30sec to the broker.
+    """
+    threading.Timer(30.0, thread_function).start()
+    client.publish("serverCommand/keepalive", "0")
+    print("Message Sent. (keepalive)")
 
 
 class Snake_game:
@@ -9,18 +19,33 @@ class Snake_game:
     Snake Game main class, with the game parameters, and methods.
     """
 
-    def __init__(self):
+    def __init__(self, client):
         """
         Constructor of the Snake Game with the parameter of the Sense HAT panel and
         with the basic parameters of the snake like direction and
         the map parameters like apple position and pixels.
         """
+        # self.client = client
         self.sense = SenseHat()
         self.trail = [[3, 3]]
         self.direction = [1, 0]  # x y
         self.length = 1
         self.apple_pos = [random.randint(0, 7), random.randint(0, 7)]
         self.pixels = [clear] * 64
+        # self.send_config_xml_to_broker()
+
+        # keepalive topic writer thread in every 30sec, to the broker (this device is online)
+        # keepalive_thread = threading.Thread(target=thread_function, args=(self.client,))
+        # keepalive_thread.start()
+
+    def send_config_xml_to_broker(self):
+        """
+        Read the config xml, convert to string, and send it to the mqtt broker.
+        """
+        xmlObject = xml.dom.minidom.parse("config_setup.xml")
+        pretty_xml_as_string = xmlObject.toprettyxml()
+        self.client.publish("users/everyone/inbox/server/deviceList", pretty_xml_as_string)
+        print("XML config sent.")
 
     # 0 = up, 1 = right, 2 = down, 3 = left
     def set_direction(self, dir):
